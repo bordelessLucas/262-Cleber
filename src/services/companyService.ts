@@ -18,13 +18,37 @@ function sanitizeFileName(originalName: string): string {
   return base || "logo";
 }
 
-async function deleteLogoIfPossible(previousLogoUrl: string | undefined): Promise<void> {
-  if (!previousLogoUrl?.trim()) return;
+function getStoragePathFromUrl(url: string): string | null {
   try {
-    const storageRef = ref(storage, previousLogoUrl);
-    await deleteObject(storageRef);
+    const decoded = decodeURIComponent(url);
+
+    // pega o trecho entre /o/ e o ?
+    const match = decoded.match(/\/o\/(.+)\?/);
+
+    return match ? match[1] : null;
   } catch {
-    // URL antiga inválida ou arquivo já removido — segue o fluxo
+    return null;
+  }
+}
+
+async function deleteLogoIfPossible(previousLogoUrl?: string): Promise<void> {
+  if (!previousLogoUrl?.trim()) return;
+
+  try {
+    const path = getStoragePathFromUrl(previousLogoUrl);
+
+    // se não conseguir extrair o path, não quebra o fluxo
+    if (!path) {
+      console.warn("Não foi possível extrair path do Storage:", previousLogoUrl);
+      return;
+    }
+
+    const storageRef = ref(storage, path);
+    await deleteObject(storageRef);
+
+  } catch (error) {
+    // nunca quebra upload por causa disso
+    console.warn("Falha ao deletar logo antiga:", error);
   }
 }
 

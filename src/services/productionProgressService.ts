@@ -14,6 +14,7 @@ import {
 import { db } from "../lib/firebaseconfig";
 import { removeUndefinedFields } from "../utils/firestoreHelpers";
 import { formatDateToISO } from "../utils/dateFormatter";
+import { parseFirebaseDate } from "../utils/parseFirebaseDate";
 import type {
   ProductionOrderProgress,
   UpdateStageProgressPayload,
@@ -42,8 +43,8 @@ export const productionProgressService = {
       id: docRef.id,
       ordemProducaoId: data.ordemProducaoId,
       etapas: data.etapas ?? [],
-      createdAt: data.createdAt?.toDate() ?? new Date(),
-      updatedAt: data.updatedAt?.toDate() ?? new Date(),
+      createdAt: parseFirebaseDate(data.createdAt) || new Date(),
+      updatedAt: parseFirebaseDate(data.updatedAt) || new Date(),
       userId: data.userId,
     };
   },
@@ -62,8 +63,8 @@ export const productionProgressService = {
         id: docRef.id,
         ordemProducaoId: data.ordemProducaoId,
         etapas: data.etapas ?? [],
-        createdAt: data.createdAt?.toDate() ?? new Date(),
-        updatedAt: data.updatedAt?.toDate() ?? new Date(),
+        createdAt: parseFirebaseDate(data.createdAt) || new Date(),
+        updatedAt: parseFirebaseDate(data.updatedAt) || new Date(),
         userId: data.userId,
       };
     });

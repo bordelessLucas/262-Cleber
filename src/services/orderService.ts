@@ -12,6 +12,7 @@ import {
   runTransaction,
 } from "firebase/firestore";
 import { db } from "../lib/firebaseconfig";
+import { parseFirebaseDate } from "../utils/parseFirebaseDate";
 import type {
   ProductionOrder,
   CreateProductionOrderPayload,
@@ -83,8 +84,8 @@ export const orderService = {
         dataPrevista: data.dataPrevista,
         responsavelId: data.responsavelId || undefined,
         responsavelNome: data.responsavelNome || undefined,
-        createdAt: data.createdAt?.toDate() ?? new Date(),
-        updatedAt: data.updatedAt?.toDate() ?? new Date(),
+        createdAt: parseFirebaseDate(data.createdAt) || new Date(),
+        updatedAt: parseFirebaseDate(data.updatedAt) || new Date(),
         userId: data.userId,
         grade: data.grade ?? [],
       };

@@ -11,6 +11,7 @@ import {
   orderBy,
 } from "firebase/firestore";
 import { db } from "../lib/firebaseconfig";
+import { parseFirebaseDate } from "../utils/parseFirebaseDate";
 import type {
   ProductionStep,
   CreateStepData,
@@ -44,8 +45,8 @@ export const stepService = {
           description: data.description,
           order: data.order,
           userId: data.userId,
-          createdAt: data.createdAt.toDate(),
-          updatedAt: data.updatedAt.toDate(),
+          createdAt: parseFirebaseDate(data.createdAt) || new Date(),
+          updatedAt: parseFirebaseDate(data.updatedAt) || new Date(),
         });
       });
       return steps;
@@ -100,8 +101,8 @@ export const stepService = {
           description: data.description,
           order: data.order,
           userId: data.userId,
-          createdAt: data.createdAt.toDate(),
-          updatedAt: data.updatedAt.toDate(),
+          createdAt: parseFirebaseDate(data.createdAt) || new Date(),
+          updatedAt: parseFirebaseDate(data.updatedAt) || new Date(),
         });
       });
 

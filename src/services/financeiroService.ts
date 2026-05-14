@@ -14,6 +14,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../lib/firebaseconfig";
 import { removeUndefinedFields } from "../utils/firestoreHelpers";
+import { parseFirebaseDate } from "../utils/parseFirebaseDate";
 import type {
   LancamentoFinanceiro,
   CreateLancamentoPayload,
@@ -29,10 +30,18 @@ const toLancamento = (
   return {
     id: docId,
     ...(data as Omit<LancamentoFinanceiro, "id">),
-    dataVencimento: (data.dataVencimento as Timestamp | undefined)?.toDate() || new Date(),
-    dataPagamento: (data.dataPagamento as Timestamp | undefined)?.toDate(),
-    createdAt: (data.createdAt as Timestamp | undefined)?.toDate() || new Date(),
-    updatedAt: (data.updatedAt as Timestamp | undefined)?.toDate() || new Date(),
+
+    dataVencimento:
+      parseFirebaseDate(data.dataVencimento) || new Date(),
+
+    dataPagamento:
+      parseFirebaseDate(data.dataPagamento) || undefined,
+
+    createdAt:
+      parseFirebaseDate(data.createdAt) || new Date(),
+
+    updatedAt:
+      parseFirebaseDate(data.updatedAt) || new Date(),
   };
 };
 

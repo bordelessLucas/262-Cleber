@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Plus, Edit, Trash2, Check } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import { stepService } from "../../services/stepService";
-import { StepModal } from "../steps/StepModal";
+import { StepModal } from "../../steps/StepModal";
 import type { ProductionStep, CreateStepData } from "../../types/step";
 import toast from "react-hot-toast";
 import { DeleteConfirmModal } from "../../components/ui/DeleteConfirmModal/DeleteConfirmModal";

@@ -12,6 +12,7 @@ import {
     deleteDoc,
   } from "firebase/firestore";
   import { db } from "../lib/firebaseconfig";
+  import { parseFirebaseDate } from "../utils/parseFirebaseDate";
   import type { Notification, CreateNotificationPayload } from "../types/notification";
   
   const COLLECTION = "notifications";
@@ -65,7 +66,7 @@ import {
             read: data.read,
             link: data.link,
             metadata: data.metadata,
-            createdAt: data.createdAt.toDate(),
+            createdAt: parseFirebaseDate(data.createdAt) || new Date(),
           });
         });
   
@@ -100,7 +101,7 @@ import {
             read: data.read,
             link: data.link,
             metadata: data.metadata,
-            createdAt: data.createdAt.toDate(),
+            createdAt: parseFirebaseDate(data.createdAt) || new Date(),
           });
         });
   

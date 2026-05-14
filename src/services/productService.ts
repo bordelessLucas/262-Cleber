@@ -17,6 +17,7 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 import { db, storage } from "../lib/firebaseconfig";
+import { parseFirebaseDate } from "../utils/parseFirebaseDate";
 import type {
   Categoria,
   Cor,
@@ -45,16 +46,7 @@ const uniqueById = <T extends { id: string }>(items: T[]): T[] =>
   Array.from(new Map(items.map((item) => [item.id, item])).values());
 
 const toDate = (value: unknown): Date | undefined => {
-  if (
-    value &&
-    typeof value === "object" &&
-    "toDate" in value &&
-    typeof value.toDate === "function"
-  ) {
-    return value.toDate();
-  }
-
-  return undefined;
+  return parseFirebaseDate(value) ?? undefined;
 };
 
 const updateExistingDocument = async (
@@ -123,7 +115,7 @@ export const categoriaService = {
             nome: data.nome || "",
             descricao: data.descricao || "",
             ativo: data.ativo !== false,
-            createdAt: toDate(data.createdAt) || new Date(),
+            createdAt: parseFirebaseDate(data.createdAt) || new Date(),
           };
         })
       );
@@ -359,8 +351,8 @@ export const produtoService = {
               : undefined,
           ativo: data.ativo !== false,
           userId: data.userId,
-          createdAt: data.createdAt?.toDate() || new Date(),
-          updatedAt: data.updatedAt?.toDate() || new Date(),
+          createdAt: parseFirebaseDate(data.createdAt) || new Date(),
+          updatedAt: parseFirebaseDate(data.updatedAt) || new Date(),
         };
       }) as Produto[];
 

@@ -10,6 +10,7 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import { db } from "../lib/firebaseconfig";
+import { parseFirebaseDate } from "../utils/parseFirebaseDate";
 import type { Task, CreateTaskData, UpdateTaskData } from "../types/task";
 
 export const taskService = {
@@ -51,9 +52,8 @@ export const taskService = {
 
       querySnapshot.forEach((doc) => {
         const data = doc.data();
-        const scheduledDate = data.scheduledDate
-          ? data.scheduledDate.toDate()
-          : data.createdAt.toDate();
+        const scheduledDate =
+          parseFirebaseDate(data.scheduledDate ?? data.createdAt) || new Date();
         tasks.push({
           id: doc.id,
           description: data.description,
@@ -62,8 +62,8 @@ export const taskService = {
           priority: data.priority,
           completed: data.completed,
           userId: data.userId,
-          createdAt: data.createdAt.toDate(),
-          updatedAt: data.updatedAt.toDate(),
+          createdAt: parseFirebaseDate(data.createdAt) || new Date(),
+          updatedAt: parseFirebaseDate(data.updatedAt) || new Date(),
         });
       });
 
@@ -125,7 +125,7 @@ export const taskService = {
     }
   },
 
-  async deleteOldTasks(_userId: string): Promise<void> {
+  async deleteOldTasks(): Promise<void> {
     // Mantido apenas para compatibilidade; não removemos tarefas automaticamente
     // para permitir histórico e navegação no calendário.
     return Promise.resolve();
